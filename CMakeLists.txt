@@ -477,7 +477,7 @@ endif()
 # Experimental support of C11 and C++11
 option(WITH_C11 "Build with C11 standard enabled, for development use only!" OFF)
 mark_as_advanced(WITH_C11)
-option(WITH_CXX11 "Build with C++11 standard enabled, for development use only!" OFF)
+option(WITH_CXX11 "Build with C++11 standard enabled, for development use only!" ON)
 mark_as_advanced(WITH_CXX11)
 
 # Dependency graph
