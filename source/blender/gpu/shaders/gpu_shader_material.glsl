@@ -1973,7 +1973,7 @@ void shade_area_spec(vec3 V, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX
 	specfac = spec;
 }
 
-void area_diff_texture(vec3 V, sampler2D tex, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out vec4 result)
+void area_diff_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out vec4 result)
 {
 	float width = areaSizeX / 2.0;
 	float height = areaSizeY / 2.0;
@@ -2005,7 +2005,7 @@ void area_diff_texture(vec3 V, sampler2D tex, vec3 lampPos, vec3 N, mat4 lampMat
 		diff = vec4(0.0);
 	}
 	else {
-		float lod = pow(d, 0.1) * 8.0;
+		float lod = (pow(d, 0.1) * 8.0) + lodbias;
         
 		vec4 t00 = texture2D(tex, co, lod);
 		vec4 t01 = texture2D(tex, co, lod + 1.0);
@@ -2015,7 +2015,7 @@ void area_diff_texture(vec3 V, sampler2D tex, vec3 lampPos, vec3 N, mat4 lampMat
 	result = diff;
 }
 
-void area_spec_texture(vec3 V, sampler2D tex, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out vec4 result)
+void area_spec_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out vec4 result)
 {
 	float width = areaSizeX;
 	float height = areaSizeY;
@@ -2051,7 +2051,7 @@ void area_spec_texture(vec3 V, sampler2D tex, vec3 lampPos, vec3 N, mat4 lampMat
 		co = co + vec2(0.5);
 		co.x = 1.0 - co.x;
 
-		float lod = (2.0 / hard * max(dist, 0.0));
+		float lod = (2.0 / hard * max(dist, 0.0)) + lodbias;
 		vec4 t00 = texture2D(tex, co, lod);
 		vec4 t01 = texture2D(tex, co, lod + 1.0);
 
