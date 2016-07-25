@@ -910,10 +910,10 @@ static void shade_area_diff_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 	MTex *mtex = NULL;
 	int i;
 	float one = 1.0f;
-       
+
 	for (i = 0; i < MAX_MTEX; ++i) {
 		mtex = lamp->la->mtex[i];
-              
+     
 		if (mtex && mtex->tex->type & TEX_IMAGE && mtex->tex->ima) {
 			mat->dynproperty = DYN_LAMP_VEC | DYN_LAMP_CO | DYN_LAMP_AREAMAT;
 			GPU_link(mat, "area_diff_texture",
@@ -938,10 +938,10 @@ static void shade_area_spec_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 	MTex *mtex = NULL;
 	int i;
 	float one = 1.0f;
-       
+
 	for (i = 0; i < MAX_MTEX; ++i) {
 		mtex = lamp->la->mtex[i];
-              
+
 		if (mtex && mtex->tex->type & TEX_IMAGE && mtex->tex->ima) {
 			mat->dynproperty = DYN_LAMP_VEC | DYN_LAMP_CO | DYN_LAMP_AREAMAT;
 			GPU_link(mat, "area_spec_texture",
@@ -949,7 +949,7 @@ static void shade_area_spec_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 					 GPU_image(mtex->tex->ima, &mtex->tex->iuser, false),
 					 GPU_select_uniform(&mtex->lodbias, GPU_DYNAMIC_TEX_LODBIAS, NULL, mat->ma),
 					 GPU_dynamic_uniform(lamp->dynco, GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
-				 	 shi->vn,
+					 shi->vn,
 					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
 					 GPU_uniform(&lamp->area_size),
 					 GPU_uniform(&lamp->area_sizey),
