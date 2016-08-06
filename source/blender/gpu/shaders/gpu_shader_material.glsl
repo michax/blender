@@ -1891,7 +1891,7 @@ void shade_is_hemi(float inp, out float is)
 
 float area_lamp_energy(mat4 lampMat, vec3 V, vec3 N, vec3 lampPos, vec2 areaSize)
 {
-	float halfSize = areaSize / 2.0;
+	vec2 halfSize = areaSize / 2.0;
 	vec3 right = normalize(vec3(lampMat * vec4(1.0, 0.0, 0.0, 0.0)));
 	vec3 up = normalize(vec3(lampMat * vec4(0.0, 1.0, 0.0, 0.0)));
 	vec3 lampv = normalize(vec3(lampMat * vec4(0.0, 0.0, -1.0, 0.0)));
