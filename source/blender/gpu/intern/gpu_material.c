@@ -923,8 +923,8 @@ static void shade_area_diff_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 					 GPU_dynamic_uniform(lamp->dynco, GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 					 shi->vn,
 					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-					 GPU_uniform(&lamp->area_size),
-					 GPU_uniform(&lamp->area_sizey),
+					 GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
+					 GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
 					 shi->har,
 					 &tex_rgb);
 			texture_rgb_blend(mat, tex_rgb, *rgb, GPU_uniform(&one), GPU_uniform(&mtex->colfac), MTEX_MUL, rgb);
@@ -951,8 +951,8 @@ static void shade_area_spec_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 					 GPU_dynamic_uniform(lamp->dynco, GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 					 shi->vn,
 					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-					 GPU_uniform(&lamp->area_size),
-					 GPU_uniform(&lamp->area_sizey),
+					 GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
+					 GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
 					 shi->har,
 					 &tex_rgb);
 			texture_rgb_blend(mat, tex_rgb, *rgb, GPU_uniform(&one), GPU_uniform(&mtex->colfac), MTEX_MUL, rgb);
@@ -999,8 +999,8 @@ static void shade_one_light(GPUShadeInput *shi, GPUShadeResult *shr, GPULamp *la
 					 GPU_dynamic_uniform(lamp->dynvec, GPU_DYNAMIC_LAMP_DYNVEC, lamp->ob),
 					 vn,
 					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-					 GPU_uniform(&lamp->area_size),
-					 GPU_uniform(&lamp->area_sizey),
+					 GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
+					 GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
 					 GPU_uniform(&lamp->dist),
 					 GPU_uniform(&lamp->k),
 					 &inp);
@@ -1156,8 +1156,8 @@ static void shade_one_light(GPUShadeInput *shi, GPUShadeResult *shr, GPULamp *la
 									GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 									vn,
 									GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-									GPU_uniform(&lamp->area_size),
-									GPU_uniform(&lamp->area_sizey),
+									GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
+									GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
 									shi->har,
 									&specfac);
 				GPU_link(mat, "shade_spec_area_inp", specfac, inp, &specfac);
@@ -2493,6 +2493,21 @@ void GPU_lamp_update(GPULamp *lamp, int lay, int hide, float obmat[4][4])
 		/* update spotlamp scale on X and Y axis */
 		lamp->spotvec[0] = obmat_scale[0] / obmat_scale[2];
 		lamp->spotvec[1] = obmat_scale[1] / obmat_scale[2];
+	}
+
+	if (lamp->type == LA_AREA) {
+		/* update arealamp scale on X and Y axis.
+		 * We choose to ignore Z axis as the lamp looks like a plane.
+		 * When we choose to use obmat which is the Object matrix,
+		 * the scale will be applied as for other objects with scale
+		 * buttons in N panel. So in the game engine, we can use
+		 * existing API to scale Objects to scale area lights.
+		 * This means that we don't need anymore specific UI for
+		 * Area Size X and Area Size Y in area panel.
+		 */
+
+		lamp->area_size = obmat_scale[0];
+		lamp->area_sizey = obmat_scale[1];
 	}
 
 	if (GPU_lamp_has_shadow_buffer(lamp)) {

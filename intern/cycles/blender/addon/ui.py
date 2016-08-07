@@ -901,15 +901,6 @@ class CyclesLamp_PT_lamp(CyclesButtonsPanel, Panel):
 
         if lamp.type in {'POINT', 'SUN', 'SPOT'}:
             col.prop(lamp, "shadow_soft_size", text="Size")
-        elif lamp.type == 'AREA':
-            col.prop(lamp, "shape", text="")
-            sub = col.column(align=True)
-
-            if lamp.shape == 'SQUARE':
-                sub.prop(lamp, "size")
-            elif lamp.shape == 'RECTANGLE':
-                sub.prop(lamp, "size", text="Size X")
-                sub.prop(lamp, "size_y", text="Size Y")
 
         if not (lamp.type == 'AREA' and clamp.is_portal):
             sub = col.column(align=True)
@@ -1663,7 +1654,6 @@ def draw_pause(self, context):
 
 def get_panels():
     exclude_panels = {
-        'DATA_PT_area',
         'DATA_PT_camera_dof',
         'DATA_PT_falloff_curve',
         'DATA_PT_lamp',

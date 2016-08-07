@@ -309,33 +309,6 @@ class DATA_PT_shadow(DataButtonsPanel, Panel):
             sub.active = not lamp.use_auto_clip_end
             sub.prop(lamp, "shadow_buffer_clip_end", text=" Clip End")
 
-
-class DATA_PT_area(DataButtonsPanel, Panel):
-    bl_label = "Area Shape"
-    COMPAT_ENGINES = {'BLENDER_RENDER', 'BLENDER_GAME'}
-
-    @classmethod
-    def poll(cls, context):
-        lamp = context.lamp
-        engine = context.scene.render.engine
-        return (lamp and lamp.type == 'AREA') and (engine in cls.COMPAT_ENGINES)
-
-    def draw(self, context):
-        layout = self.layout
-
-        lamp = context.lamp
-
-        col = layout.column()
-        col.row().prop(lamp, "shape", expand=True)
-        sub = col.row(align=True)
-
-        if lamp.shape == 'SQUARE':
-            sub.prop(lamp, "size")
-        elif lamp.shape == 'RECTANGLE':
-            sub.prop(lamp, "size", text="Size X")
-            sub.prop(lamp, "size_y", text="Size Y")
-
-
 class DATA_PT_spot(DataButtonsPanel, Panel):
     bl_label = "Spot Shape"
     COMPAT_ENGINES = {'BLENDER_RENDER', 'BLENDER_GAME'}
