@@ -2496,18 +2496,9 @@ void GPU_lamp_update(GPULamp *lamp, int lay, int hide, float obmat[4][4])
 	}
 
 	if (lamp->type == LA_AREA) {
-		/* update arealamp scale on X and Y axis.
-		 * We choose to ignore Z axis as the lamp looks like a plane.
-		 * When we choose to use obmat which is the Object matrix,
-		 * the scale will be applied as for other objects with scale
-		 * buttons in N panel. So in the game engine, we can use
-		 * existing API to scale Objects to scale area lights.
-		 * This means that we don't need anymore specific UI for
-		 * Area Size X and Area Size Y in area panel.
-		 */
-
-		lamp->area_size = obmat_scale[0];
-		lamp->area_sizey = obmat_scale[1];
+		/* Scale area sizes by lamp object scale. */
+		lamp->area_size = lamp->la->area_size * obmat_scale[0];
+		lamp->area_sizey = lamp->la->area_sizey * obmat_scale[1];
 	}
 
 	if (GPU_lamp_has_shadow_buffer(lamp)) {
