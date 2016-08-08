@@ -1491,8 +1491,10 @@ static void drawlamp(View3D *v3d, RegionView3D *rv3d, Base *base,
 	}
 	else if (la->type == LA_AREA) {
 		setlinestyle(3);
-		
-		fdrawbox(-la->area_size * 0.5f, -la->area_sizey * 0.5f, la->area_size * 0.5f, la->area_sizey * 0.5f);
+		if (la->area_shape == LA_AREA_SQUARE)
+			fdrawbox(-la->area_size * 0.5f, -la->area_size * 0.5f, la->area_size * 0.5f, la->area_size * 0.5f);
+		else if (la->area_shape == LA_AREA_RECT)
+			fdrawbox(-la->area_size * 0.5f, -la->area_sizey * 0.5f, la->area_size * 0.5f, la->area_sizey * 0.5f);
 
 		glBegin(GL_LINES);
 		glVertex3f(0.0, 0.0, -circrad);
