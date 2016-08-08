@@ -915,7 +915,7 @@ static void shade_area_diff_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 		mtex = lamp->la->mtex[i];
      
 		if (mtex && mtex->tex->type & TEX_IMAGE && mtex->tex->ima) {
-			mat->dynproperty = DYN_LAMP_VEC | DYN_LAMP_CO | DYN_LAMP_AREAMAT;
+			mat->dynproperty |= DYN_LAMP_CO | DYN_LAMP_AREAMAT;
 			GPU_link(mat, "area_diff_texture",
 					 GPU_builtin(GPU_VIEW_POSITION),
 					 GPU_image(mtex->tex->ima, &mtex->tex->iuser, false),
@@ -943,7 +943,7 @@ static void shade_area_spec_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 		mtex = lamp->la->mtex[i];
 
 		if (mtex && mtex->tex->type & TEX_IMAGE && mtex->tex->ima) {
-			mat->dynproperty = DYN_LAMP_VEC | DYN_LAMP_CO | DYN_LAMP_AREAMAT;
+			mat->dynproperty |= DYN_LAMP_CO | DYN_LAMP_AREAMAT;
 			GPU_link(mat, "area_spec_texture",
 					 GPU_builtin(GPU_VIEW_POSITION),
 					 GPU_image(mtex->tex->ima, &mtex->tex->iuser, false),
