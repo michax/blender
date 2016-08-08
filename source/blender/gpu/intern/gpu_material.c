@@ -2494,7 +2494,12 @@ void GPU_lamp_update(GPULamp *lamp, int lay, int hide, float obmat[4][4])
 	if (lamp->type == LA_AREA) {
 		/* Scale area sizes by lamp object scale. */
 		lamp->area_size[0] = lamp->la->area_size * obmat_scale[0];
-		lamp->area_size[1] = lamp->la->area_sizey * obmat_scale[1];
+		if (lamp->la->area_shape == LA_AREA_SQUARE) {
+			lamp->area_size[1] = lamp->la->area_size * obmat_scale[1];
+		}
+		else {
+			lamp->area_size[1] = lamp->la->area_sizey * obmat_scale[1];
+		}
 	}
 
 	if (GPU_lamp_has_shadow_buffer(lamp)) {
