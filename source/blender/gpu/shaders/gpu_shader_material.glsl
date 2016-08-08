@@ -1920,23 +1920,22 @@ float area_lamp_energy(mat4 lampMat, vec3 V, vec3 N, vec3 lampPos, vec2 areaSize
 }
 
 void shade_inp_area(
-		vec3 V, vec3 lampPos, vec3 lampVec, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY,
+		vec3 V, vec3 lampPos, vec3 lampVec, vec3 N, mat4 lampMat, vec2 areaSize,
 		float dist, float k, out float inp)
 {
 	vec3 vec = V - lampPos;
-	vec2 asize = vec2(areaSizeX, areaSizeY);
 
 	float strength = dist * dist / 4.0;
 	if (dot(vec, lampVec) < 0.0) {
 		inp = 0.0;
 	}
 	else {
-		float intens = area_lamp_energy(lampMat, V, N, lampPos, asize);
+		float intens = area_lamp_energy(lampMat, V, N, lampPos, areaSize);
 		inp = pow(intens * strength, k);
 	}
 }
 
-void shade_area_spec(vec3 V, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out float specfac)
+void shade_area_spec(vec3 V, vec3 lampPos, vec3 N, mat4 lampMat, vec2 areaSize, float hard, out float specfac)
 {
 	hard /= 4.0;
 	float gloss = 4.0;
@@ -1957,7 +1956,7 @@ void shade_area_spec(vec3 V, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX
 
 		float dist = max(distance(V, specPlane), 0.0);
 
-		vec2 halfSize = vec2(areaSizeX, areaSizeY) / 2.0;
+		vec2 halfSize = areaSize / 2.0;
 		halfSize -= ((1.0 / hard) / 2.0) * (dist / gloss);
 		halfSize = max(halfSize, 0.0);
 
@@ -1966,9 +1965,9 @@ void shade_area_spec(vec3 V, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX
 	}
 }
 
-void area_diff_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out vec4 result)
+void area_diff_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 N, mat4 lampMat, vec2 areaSize, float hard, out vec4 result)
 {
-	vec2 halfSize = vec2(areaSizeX, areaSizeY) / 2.0;
+	vec2 halfSize = areaSize / 2.0;
 
 	hard /= 4.0;
 	float gloss = 4.0;
@@ -2004,7 +2003,7 @@ void area_diff_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 
 	}
 }
 
-void area_spec_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 N, mat4 lampMat, float areaSizeX, float areaSizeY, float hard, out vec4 result)
+void area_spec_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 N, mat4 lampMat, vec2 areaSize, float hard, out vec4 result)
 {
 	hard /= 4.0;
 	float gloss = 4.0;
@@ -2027,8 +2026,6 @@ void area_spec_texture(vec3 V, sampler2D tex, float lodbias, vec3 lampPos, vec3 
 		float dist = max(distance(V, specPlane), 0.0);
 
 		float d = ((1.0 / hard) / 2.0) * (dist / gloss);
-
-		vec2 areaSize = max(vec2(areaSizeX, areaSizeY), 0.0);
 
 		vec2 co = (dirSpec2D) / (d + 1.0);
 		co /= areaSize;

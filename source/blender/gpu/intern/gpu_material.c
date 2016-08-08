@@ -156,7 +156,7 @@ struct GPULamp {
 	float dynareamat[4][4];
 
 	float spotsi, spotbl, k;
-	float area_size, area_sizey;
+	float area_size[2];
 	float spotvec[2];
 	float dyndist, dynatt1, dynatt2;
 	float dist, att1, att2;
@@ -922,9 +922,8 @@ static void shade_area_diff_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 					 GPU_select_uniform(&mtex->lodbias, GPU_DYNAMIC_TEX_LODBIAS, NULL, mat->ma),
 					 GPU_dynamic_uniform(lamp->dynco, GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 					 shi->vn,
-					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-					 GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
-					 GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
+					 GPU_dynamic_uniform((float *)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
+					 GPU_dynamic_uniform((float *)lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASIZE, lamp->ob),
 					 shi->har,
 					 &tex_rgb);
 			texture_rgb_blend(mat, tex_rgb, *rgb, GPU_uniform(&one), GPU_uniform(&mtex->colfac), MTEX_MUL, rgb);
@@ -950,9 +949,8 @@ static void shade_area_spec_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 					 GPU_select_uniform(&mtex->lodbias, GPU_DYNAMIC_TEX_LODBIAS, NULL, mat->ma),
 					 GPU_dynamic_uniform(lamp->dynco, GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 					 shi->vn,
-					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-					 GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
-					 GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
+					 GPU_dynamic_uniform((float *)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
+					 GPU_dynamic_uniform((float *)lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASIZE, lamp->ob),
 					 shi->har,
 					 &tex_rgb);
 			texture_rgb_blend(mat, tex_rgb, *rgb, GPU_uniform(&one), GPU_uniform(&mtex->colfac), MTEX_MUL, rgb);
@@ -998,9 +996,8 @@ static void shade_one_light(GPUShadeInput *shi, GPUShadeResult *shr, GPULamp *la
 					 GPU_dynamic_uniform(lamp->dynco, GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 					 GPU_dynamic_uniform(lamp->dynvec, GPU_DYNAMIC_LAMP_DYNVEC, lamp->ob),
 					 vn,
-					 GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-					 GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
-					 GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
+					 GPU_dynamic_uniform((float *)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
+					 GPU_dynamic_uniform((float *)lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASIZE, lamp->ob),
 					 GPU_uniform(&lamp->dist),
 					 GPU_uniform(&lamp->k),
 					 &inp);
@@ -1155,9 +1152,8 @@ static void shade_one_light(GPUShadeInput *shi, GPUShadeResult *shr, GPULamp *la
 				GPU_dynamic_uniform(lamp->dynco,
 									GPU_DYNAMIC_LAMP_DYNCO, lamp->ob),
 									vn,
-									GPU_dynamic_uniform((float*)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
-									GPU_dynamic_uniform(&lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASCALEX, lamp->ob),
-									GPU_dynamic_uniform(&lamp->area_sizey, GPU_DYNAMIC_LAMP_DYNAREASCALEY, lamp->ob),
+									GPU_dynamic_uniform((float *)lamp->dynareamat, GPU_DYNAMIC_LAMP_DYNAREAMAT, lamp->ob),
+									GPU_dynamic_uniform((float *)lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASIZE, lamp->ob),
 									shi->har,
 									&specfac);
 				GPU_link(mat, "shade_spec_area_inp", specfac, inp, &specfac);
@@ -2497,8 +2493,8 @@ void GPU_lamp_update(GPULamp *lamp, int lay, int hide, float obmat[4][4])
 
 	if (lamp->type == LA_AREA) {
 		/* Scale area sizes by lamp object scale. */
-		lamp->area_size = lamp->la->area_size * obmat_scale[0];
-		lamp->area_sizey = lamp->la->area_sizey * obmat_scale[1];
+		lamp->area_size[0] = lamp->la->area_size * obmat_scale[0];
+		lamp->area_size[1] = lamp->la->area_sizey * obmat_scale[1];
 	}
 
 	if (GPU_lamp_has_shadow_buffer(lamp)) {
@@ -2562,12 +2558,12 @@ static void gpu_lamp_from_blender(Scene *scene, Object *ob, Object *par, Lamp *l
 	lamp->spotbl = (1.0f - lamp->spotsi) * la->spotblend;
 	lamp->k = la->k;
 
-	lamp->area_size = la->area_size;
+	lamp->area_size[0] = la->area_size;
 	if (la->area_shape == LA_AREA_SQUARE) {
-		lamp->area_sizey = la->area_size;
+		lamp->area_size[1] = la->area_size;
 	}
 	else {
-		lamp->area_sizey = la->area_sizey;
+		lamp->area_size[1] = la->area_sizey;
 	}
 
 	lamp->dist = la->dist;
