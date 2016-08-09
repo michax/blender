@@ -981,7 +981,7 @@ static void shade_one_light(GPUShadeInput *shi, GPUShadeResult *shr, GPULamp *la
 	
 	GPU_link(mat, "shade_inp", vn, lv, &inp);
 
-	if (lamp->mode & LA_NO_DIFF) {
+	if (lamp->mode & LA_NO_DIFF && lamp->type != LA_AREA) {
 		GPU_link(mat, "shade_is_no_diffuse", &is);
 	}
 	else if (lamp->type == LA_HEMI) {
