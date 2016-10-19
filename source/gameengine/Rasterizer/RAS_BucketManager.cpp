@@ -142,7 +142,6 @@ void RAS_BucketManager::OrderBuckets(const MT_Transform& cameratrans, RAS_Bucket
 			for (RAS_MeshSlotList::iterator it = activeMeshSlots.begin(), end = activeMeshSlots.end(); it != end; ++it) {
 				slots[i++].set(*it, bucket, pnorm);
 			}
-			displayArrayBucket->RemoveActiveMeshSlots();
 		}
 	}
 
@@ -369,7 +368,9 @@ void RAS_BucketManager::Renderbuckets(const MT_Transform& cameratrans, RAS_IRast
 		/* Don't do this while processing buckets because some meshes are split between buckets */
 		BucketList& buckets = m_buckets[ALL_BUCKET];
 		for (BucketList::iterator it = buckets.begin(), end = buckets.end(); it != end; ++it) {
-			(*it)->SetMeshUnmodified();
+			RAS_MaterialBucket *bucket = *it;
+			bucket->SetMeshUnmodified();
+			bucket->RemoveActiveMeshSlots();
 		}
 	}
 

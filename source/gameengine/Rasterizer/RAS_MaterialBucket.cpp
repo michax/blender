@@ -129,6 +129,16 @@ void RAS_MaterialBucket::RemoveMeshObject(RAS_MeshObject *mesh)
 	}
 }
 
+void RAS_MaterialBucket::RemoveActiveMeshSlots()
+{
+	for (RAS_DisplayArrayBucketList::iterator it = m_displayArrayBucketList.begin(), end = m_displayArrayBucketList.end();
+		it != end; ++it)
+	{
+		RAS_DisplayArrayBucket *displayArrayBucket = *it;
+		displayArrayBucket->RemoveActiveMeshSlots();
+	}
+}
+
 unsigned int RAS_MaterialBucket::GetNumActiveMeshSlots()
 {
 	unsigned int count = 0;
@@ -218,7 +228,6 @@ void RAS_MaterialBucket::RenderMeshSlots(const MT_Transform& cameratrans, RAS_IR
 	{
 		RAS_DisplayArrayBucket *displayArrayBucket = *it;
 		if (!matactivated) {
-			displayArrayBucket->RemoveActiveMeshSlots();
 			continue;
 		}
 
@@ -229,8 +238,6 @@ void RAS_MaterialBucket::RenderMeshSlots(const MT_Transform& cameratrans, RAS_IR
 		else {
 			displayArrayBucket->RenderMeshSlots(cameratrans, rasty);
 		}
-
-		displayArrayBucket->RemoveActiveMeshSlots();
 	}
 
 	if (matactivated) {

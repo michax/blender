@@ -453,22 +453,22 @@ RAS_OpenGLRasterizer::~RAS_OpenGLRasterizer()
 	}
 }
 
-void RAS_OpenGLRasterizer::Enable(RAS_IRasterizer::EnableBit bit)
+inline void RAS_OpenGLRasterizer::Enable(RAS_IRasterizer::EnableBit bit)
 {
 	glEnable(openGLEnableBitEnums[bit]);
 }
 
-void RAS_OpenGLRasterizer::Disable(RAS_IRasterizer::EnableBit bit)
+inline void RAS_OpenGLRasterizer::Disable(RAS_IRasterizer::EnableBit bit)
 {
 	glDisable(openGLEnableBitEnums[bit]);
 }
 
-void RAS_OpenGLRasterizer::SetDepthFunc(RAS_IRasterizer::DepthFunc func)
+inline void RAS_OpenGLRasterizer::SetDepthFunc(RAS_IRasterizer::DepthFunc func)
 {
 	glDepthFunc(openGLDepthFuncEnums[func]);
 }
 
-void RAS_OpenGLRasterizer::SetBlendFunc(BlendFunc src, BlendFunc dst)
+inline void RAS_OpenGLRasterizer::SetBlendFunc(BlendFunc src, BlendFunc dst)
 {
 	glBlendFunc(openGLBlendFuncEnums[src], openGLBlendFuncEnums[dst]);
 }
