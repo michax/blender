@@ -354,6 +354,25 @@ void RAS_BucketManager::Renderbuckets(const MT_Transform& cameratrans, RAS_IRast
 			rasty->SetDepthMask(RAS_IRasterizer::RAS_DEPTHMASK_ENABLED);
 			break;
 		}
+		case RAS_IRasterizer::RAS_CUBEMAP:
+		{
+			/* Rendering solid and alpha (regular and instancing) materials
+			 * with their shaders.
+			 */
+
+			rasty->SetDepthMask(RAS_IRasterizer::RAS_DEPTHMASK_ENABLED);
+
+			RenderBasicBuckets(cameratrans, rasty, SOLID_BUCKET);
+			RenderBasicBuckets(cameratrans, rasty, SOLID_INSTANCING_BUCKET);
+
+			rasty->SetDepthMask(RAS_IRasterizer::RAS_DEPTHMASK_DISABLED);
+
+			RenderBasicBuckets(cameratrans, rasty, ALPHA_INSTANCING_BUCKET);
+			RenderSortedBuckets(cameratrans, rasty, ALPHA_BUCKET);
+
+			rasty->SetDepthMask(RAS_IRasterizer::RAS_DEPTHMASK_ENABLED);
+			break;
+		}
 		default:
 		{
 			break;
