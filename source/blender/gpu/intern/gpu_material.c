@@ -1367,17 +1367,18 @@ static void do_material_tex(GPUShadeInput *shi)
 			/* in case of uv, this would just undo a multiplication in texco_uv */
 			if (mtex->texco != TEXCO_UV)
 				GPU_link(mat, "mtex_2d_mapping", texco, &texco);
-			if (mtex->size[0] != 1.0f || mtex->size[1] != 1.0f || mtex->size[2] != 1.0f)
-				GPU_link(mat, "mtex_mapping_size", texco, GPU_uniform(mtex->size), &texco);
 
-			float ofs[3] = {
-				mtex->ofs[0] + 0.5f - 0.5f * mtex->size[0],
-				mtex->ofs[1] + 0.5f - 0.5f * mtex->size[1],
-				0.0f
-			};
-
-			if (ofs[0] != 0.0f || ofs[1] != 0.0f || ofs[2] != 0.0f)
-				GPU_link(mat, "mtex_mapping_ofs", texco, GPU_uniform(ofs), &texco);
+			if (!(ma->constflag & MA_CONSTANT_TEXTURE_UV) || 
+				(mtex->size[0] != 1.0f || mtex->size[1] != 1.0f || mtex->size[2] != 1.0f) ||
+				(mtex->ofs[0] == 0.0f || mtex->ofs[1] == 0.0f) ||
+				(mtex->rot != 0.0f))
+			{
+				GPU_link(mat, "mtex_mapping_transform", texco,
+						 GPU_select_uniform(&mtex->rot, GPU_DYNAMIC_TEX_UVROTATION, NULL, ma),
+						 GPU_select_uniform(mtex->ofs, GPU_DYNAMIC_TEX_UVOFFSET, NULL, ma),
+						 GPU_select_uniform(mtex->size, GPU_DYNAMIC_TEX_UVSIZE, NULL, ma),
+						 &texco);
+			}
 
 			talpha = 0;
 

@@ -1369,6 +1369,15 @@ void mtex_mapping_size(vec3 texco, vec3 size, out vec3 outtexco)
 	outtexco = size * texco;
 }
 
+void mtex_mapping_transform(vec3 texco, float drot, vec3 ofs, vec3 size, out vec3 outtexco)
+{
+	mat3 mat = mat3(cos(drot), -sin(drot), 0.0,
+					sin(drot), cos(drot), 0.0,
+					0.0, 0.0, 1.0);
+
+	outtexco = (texco - vec3(0.5)) * mat * size + vec3(0.5) + ofs;
+}
+
 void mtex_2d_mapping(vec3 vec, out vec3 outvec)
 {
 	outvec = vec3(vec.xy * 0.5 + vec2(0.5), vec.z);
