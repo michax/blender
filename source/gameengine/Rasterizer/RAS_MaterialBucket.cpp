@@ -228,6 +228,9 @@ void RAS_MaterialBucket::RenderMeshSlots(const MT_Transform& cameratrans, RAS_IR
 		if (UseInstancing()) {
 			displayArrayBucket->RenderMeshSlotsInstancing(cameratrans, rasty, IsAlpha());
 		}
+		else if (displayArrayBucket->UseBatching()) {
+			displayArrayBucket->RenderMeshSlotsBatching(cameratrans, rasty, IsAlpha());
+		}
 		else {
 			displayArrayBucket->RenderMeshSlots(cameratrans, rasty);
 		}

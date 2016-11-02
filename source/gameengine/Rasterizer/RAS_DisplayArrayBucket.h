@@ -124,6 +124,8 @@ public:
 	bool UseDisplayList() const;
 	bool UseVao() const;
 
+	bool UseBatching() const;
+
 	/// Update render infos.
 	void UpdateActiveMeshSlots(RAS_IRasterizer *rasty);
 	/// Set the mesh object as unmodified flag.
@@ -146,6 +148,8 @@ public:
 	void RenderMeshSlots(const MT_Transform& cameratrans, RAS_IRasterizer *rasty);
 	/// Render all mesh slots with geometry instancing render.
 	void RenderMeshSlotsInstancing(const MT_Transform& cameratrans, RAS_IRasterizer *rasty, bool alpha);
+	/// Render all mesh slats with a batched display array.
+	void RenderMeshSlotsBatching(const MT_Transform& cameratrans, RAS_IRasterizer *rasty, bool alpha);
 
 	/// Replace the material bucket of this display array bucket by the one given.
 	void ChangeMaterialBucket(RAS_MaterialBucket *bucket);
