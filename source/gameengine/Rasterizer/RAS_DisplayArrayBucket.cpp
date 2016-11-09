@@ -388,8 +388,9 @@ void RAS_DisplayArrayBucket::RenderMeshSlotsBatching(const MT_Transform& camerat
 	// Update deformer and render settings.
 	UpdateActiveMeshSlots(rasty);
 
-	std::vector<unsigned int> counts;
-	std::vector<unsigned int> indices;
+	// We must use a int instead of unsigned size to match GLsizei type.
+	std::vector<int> counts;
+	std::vector<void *> indices;
 
 	RAS_IDisplayArrayBatching *arrayBatching = dynamic_cast<RAS_IDisplayArrayBatching *>(m_displayArray);
 
@@ -413,8 +414,9 @@ void RAS_DisplayArrayBucket::RenderMeshSlotsBatching(const MT_Transform& camerat
 	else {
 		for (RAS_MeshSlotList::iterator it = m_activeMeshSlots.begin(), end = m_activeMeshSlots.end(); it != end; ++it) {
 			const short index = (*it)->m_batchIndex;
-			indices.push_back(arrayBatching->GetArrayIndice(index));
-			counts.push_back(arrayBatching->GetArrayCount(index));
+			std::cout << "index: " << index << std::endl;
+			indices.push_back(arrayBatching->GetPartIndexOffset(index));
+			counts.push_back(arrayBatching->GetPartIndexCount(index));
 		}
 	}
 

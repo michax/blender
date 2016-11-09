@@ -278,8 +278,7 @@ public:
 	virtual void UnbindPrimitives(RAS_DisplayArrayBucket *arrayBucket);
 	virtual void IndexPrimitives(RAS_MeshSlot *ms);
 	virtual void IndexPrimitivesInstancing(RAS_DisplayArrayBucket *arrayBucket);
-	virtual void IndexPrimitivesBatching(RAS_DisplayArrayBucket *arrayBucket, const std::vector<unsigned int>& indices,
-										 const std::vector<unsigned int>& counts);
+	virtual void IndexPrimitivesBatching(RAS_DisplayArrayBucket *arrayBucket, const std::vector<void *>& indices, const std::vector<int>& counts);
 	virtual void IndexPrimitivesText(RAS_MeshSlot *ms);
 	virtual void DrawDerivedMesh(class RAS_MeshSlot *ms);
 
