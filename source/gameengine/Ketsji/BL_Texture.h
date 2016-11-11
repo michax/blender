@@ -112,6 +112,7 @@ public:
 	static int pyattr_set_ior(void *self_v, const KX_PYATTRIBUTE_DEF *attrdef, PyObject *value);
 	static PyObject *pyattr_get_refraction_ratio(void *self_v, const KX_PYATTRIBUTE_DEF *attrdef);
 	static int pyattr_set_refraction_ratio(void *self_v, const KX_PYATTRIBUTE_DEF *attrdef, PyObject *value);
+	static PyObject *pyattr_get_planar(void *self_v, const KX_PYATTRIBUTE_DEF *attrdef);
 
 #endif  // WITH_PYTHON
 };

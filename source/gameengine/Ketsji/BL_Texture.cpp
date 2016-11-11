@@ -24,6 +24,7 @@
 
 #include "BL_Texture.h"
 #include "KX_CubeMap.h"
+#include "KX_Planar.h"
 
 #include "DNA_texture_types.h"
 
@@ -242,6 +243,7 @@ PyAttributeDef BL_Texture::Attributes[] = {
 	KX_PYATTRIBUTE_RO_FUNCTION("cubeMap", BL_Texture, pyattr_get_cube_map),
 	KX_PYATTRIBUTE_RW_FUNCTION("ior", BL_Texture, pyattr_get_ior, pyattr_set_ior),
 	KX_PYATTRIBUTE_RW_FUNCTION("refractionRatio", BL_Texture, pyattr_get_refraction_ratio, pyattr_set_refraction_ratio),
+	KX_PYATTRIBUTE_RO_FUNCTION("planar", BL_Texture, pyattr_get_planar),
 	{ NULL }    //Sentinel
 };
 
@@ -556,6 +558,16 @@ int BL_Texture::pyattr_set_refraction_ratio(void *self_v, const KX_PYATTRIBUTE_D
 	CLAMP(val, 0.0, 1.0);
 	self->GetMTex()->refrratio = val;
 	return PY_SET_ATTR_SUCCESS;
+}
+PyObject *BL_Texture::pyattr_get_planar(void *self_v, const KX_PYATTRIBUTE_DEF *attrdef)
+{
+	BL_Texture *self = static_cast<BL_Texture *>(self_v);
+	KX_Planar *planar = (KX_Planar *)self->GetPlanar();
+	if (planar) {
+		return planar->GetProxy();
+	}
+
+	Py_RETURN_NONE;
 }
 
 #endif  // WITH_PYTHON
