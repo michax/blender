@@ -883,12 +883,8 @@ static void shade_light_textures(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink **
 		MTex *mtex = lamp->la->mtex[i];
 
 		if (mtex && mtex->tex->type & TEX_IMAGE && mtex->tex->ima) {
-			if (lamp->type == LA_AREA) {
-				mat->dynproperty = DYN_LAMP_VEC | DYN_LAMP_CO | DYN_LAMP_AREAMAT;
-			}
-			else {
-				mat->dynproperty |= DYN_LAMP_PERSMAT;
-			}
+			
+			mat->dynproperty |= DYN_LAMP_PERSMAT;
 
 			float one = 1.0f;
 			GPUNodeLink *tex_rgb;
@@ -953,7 +949,7 @@ static void shade_area_spec_texture(GPUMaterial *mat, GPULamp *lamp, GPUNodeLink
 					 GPU_dynamic_uniform((float *)lamp->area_size, GPU_DYNAMIC_LAMP_DYNAREASIZE, lamp->ob),
 					 shi->har,
 					 &tex_rgb);
-			texture_rgb_blend(mat, tex_rgb, *rgb, GPU_uniform(&one), GPU_uniform(&mtex->colfac), MTEX_MUL, rgb);
+			texture_rgb_blend(mat, tex_rgb, *rgb, GPU_uniform(&one), GPU_uniform(&mtex->colfac), MTEX_BLEND, rgb);
 		}
 	}
 }
@@ -1029,7 +1025,7 @@ static void shade_one_light(GPUShadeInput *shi, GPUShadeResult *shr, GPULamp *la
 	GPU_link(mat, "shade_visifac", i, visifac, shi->refl, &i);
 	
 	GPU_link(mat, "set_rgb", GPU_dynamic_uniform(lamp->dyncol, GPU_DYNAMIC_LAMP_DYNCOL, lamp->ob), &lcol);
-	if (lamp->type == LA_AREA) {
+	if (lamp->type == LA_AREA && !(lamp->mode & LA_NO_DIFF)) {
 		shade_area_diff_texture(mat, lamp, &lcol, shi);
 	}
 	else {
