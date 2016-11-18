@@ -791,7 +791,7 @@ public:
 
 	/// Return the mesh user of this game object.
 	RAS_MeshUser *GetMeshUser() const;
-	
+
 	/**
 	 * Was this object marked visible? (only for the explicit
 	 * visibility system).
